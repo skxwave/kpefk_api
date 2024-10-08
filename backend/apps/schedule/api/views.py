@@ -1,23 +1,35 @@
 import json
+import os
 
+from dotenv import load_dotenv
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from apps.schedule.helpers import groups_to_json, main
 
+load_dotenv()
+
+true_password = os.getenv("PASSWORD")
+
 
 class UpdateScheduleAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        groups_to_json()
-        main()
-        return Response(
-            data={
-                "status": "OK",
-                "message": "schedule updated",
-            },
-            status=status.HTTP_200_OK,
-        )
+        if request.data.get("password", None) == true_password:
+            groups_to_json()
+            main()
+            return Response(
+                data={
+                    "status": "OK",
+                    "message": "schedule updated",
+                },
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(
+                data={"status": "401", "result": "Unauthorized"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
 
 class GetAllScheduleAPIView(APIView):
