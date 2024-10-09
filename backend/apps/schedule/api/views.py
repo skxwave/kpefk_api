@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from apps.schedule.helpers import groups_to_json, main
 
@@ -14,8 +15,19 @@ true_password = os.getenv("PASSWORD")
 
 
 class UpdateScheduleAPIView(APIView):
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="password",
+                location=OpenApiParameter.HEADER,
+                description="Enter password to update schedule",
+                required=True,
+                type=str,
+            ),
+        ]
+    )
     def post(self, request, *args, **kwargs):
-        if request.data.get("password", None) == true_password:
+        if request.headers.get("password", None) == true_password:
             groups_to_json()
             main()
             return Response(
