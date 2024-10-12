@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     # Local apps
     "apps.schedule",
+    "apps.groups",
 ]
 
 MIDDLEWARE = [
