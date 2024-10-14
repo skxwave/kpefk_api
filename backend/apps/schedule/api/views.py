@@ -80,3 +80,17 @@ class GetGroupScheduleAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class GetGlobalInfoAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        with open("schedule.json", encoding="utf-8") as file:
+            data = json.load(file)
+
+        return Response(
+            data={
+                "status": "OK",
+                "result": data["general"],
+            },
+            status=status.HTTP_200_OK,
+        )
